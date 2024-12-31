@@ -35,6 +35,15 @@ pub fn main() !void {
     const length = array.len; // 5
     std.debug.print("word:{s}; length:{d}\n", .{ array, length });
     std.debug.print("---------------{s}---------------\n", .{"Arrays"});
+
+    std.debug.print("---------------{s}---------------\n", .{"For"});
+    //character literals are equivalent to integer literals
+    const string = [_]u8{ 'a', 'b', 'c' };
+
+    for (string, 0..) |character, index| {
+        std.debug.print("character:{c}; ascii:{d}; index:{d}\n", .{ character, character, index });
+    }
+    std.debug.print("---------------{s}---------------\n", .{"For"});
 }
 
 test "always succeeds" {
@@ -65,4 +74,54 @@ test "while" {
         i *= 2;
     }
     try expect(i == 128);
+}
+
+test "while with continue expression" {
+    var sum: u8 = 0;
+    var i: u8 = 1;
+    // Just like JS `for (let i)`
+    while (i <= 10) : (i += 1) {
+        sum += i;
+    }
+    try expect(sum == 55);
+}
+
+test "while with continue" {
+    var sum: u8 = 0;
+    var i: u8 = 0;
+    while (i <= 3) : (i += 1) {
+        if (i == 2) continue;
+        sum += i;
+    }
+    try expect(sum == 4);
+}
+
+test "while with break" {
+    var sum: u8 = 0;
+    var i: u8 = 0;
+    while (i <= 3) : (i += 1) {
+        if (i == 2) break;
+        sum += i;
+    }
+    try expect(sum == 1);
+}
+
+test "for" {
+    //character literals are equivalent to integer literals
+    const string = [_]u8{ 'a', 'b', 'c' };
+
+    for (string, 0..) |character, index| {
+        _ = character;
+        _ = index;
+    }
+
+    for (string) |character| {
+        _ = character;
+    }
+
+    for (string, 0..) |_, index| {
+        _ = index;
+    }
+
+    for (string) |_| {}
 }
