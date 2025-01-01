@@ -1,5 +1,6 @@
 const std = @import("std");
 const expect = std.testing.expect;
+const expectEqual = std.testing.expectEqual;
 
 pub fn main() !void {
     std.debug.print("---------------{s}---------------\n", .{"Hello World"});
@@ -145,4 +146,23 @@ fn fibonacci(n: u16) u16 {
 test "function recursion" {
     const x = fibonacci(10);
     try expect(x == 55);
+}
+
+test "defer" {
+    var x: i16 = 5;
+    {
+        defer x += 2;
+        try expect(x == 5);
+    }
+    try expect(x == 7);
+}
+
+test "multi defer" {
+    var x: f32 = 5;
+    {
+        // When there are multiple defers in a single block, they are executed in reverse order.
+        defer x += 2; // Runs second
+        defer x /= 2; // Runs first
+    }
+    try expectEqual(4.5, x);
 }
